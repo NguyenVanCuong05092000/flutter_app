@@ -23,13 +23,45 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
-  final imgAvatar = ["img_1.jpg","img_2.jpg","img_3.jpg","img_4.jpg","img_5.jpg","img_6.jpg","img_7.jpg","img_8.jpg","img_9.jpg"];
-  final tvTitle = ["img_1.jpg","img_2.jpg","img_3.jpg","img_4.jpg","img_5.jpg","img_6.jpg","img_7.jpg","img_8.jpg","img_9.jpg"];
-  final price = [1,2,3,4,5,6,7,8,9];
-  final description = ["Học Flutter 1","Học Flutter 2","Học Flutter 3","Học Flutter 4","Học Flutter 5","Học Flutter 6","Học Flutter 7","Học Flutter 8","Học Flutter 9"];
-  onClickTextView(String string){
+  final imgAvatar = [
+    "img_1.jpg",
+    "img_2.jpg",
+    "img_3.jpg",
+    "img_4.jpg",
+    "img_5.jpg",
+    "img_6.jpg",
+    "img_7.jpg",
+    "img_8.jpg",
+    "img_9.jpg"
+  ];
+  final tvTitle = [
+    "img_1.jpg",
+    "img_2.jpg",
+    "img_3.jpg",
+    "img_4.jpg",
+    "img_5.jpg",
+    "img_6.jpg",
+    "img_7.jpg",
+    "img_8.jpg",
+    "img_9.jpg"
+  ];
+  final price = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  final description = [
+    "Học Flutter 1",
+    "Học Flutter 2",
+    "Học Flutter 3",
+    "Học Flutter 4",
+    "Học Flutter 5",
+    "Học Flutter 6",
+    "Học Flutter 7",
+    "Học Flutter 8",
+    "Học Flutter 9"
+  ];
+
+  onClickTextView(String string) {
     print(string);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,10 +72,9 @@ class MyHomePage extends StatelessWidget {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-            InkWell(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SecondScreen())),
-              child: Text("Nguyễn Văn Cường"),
-            ),
+              InkWell(
+                child: Text("Nguyễn Văn Cường"),
+              ),
               Expanded(
                   child: Container(
                       padding: EdgeInsets.all(5),
@@ -75,9 +106,8 @@ class MyHomePage extends StatelessWidget {
                             width: 300,
                             child: TextField(
                               decoration: InputDecoration(
-                                border: UnderlineInputBorder(),
-                                  labelText: "Enter your username"
-                              ),
+                                  border: UnderlineInputBorder(),
+                                  labelText: "Enter your username"),
                             ),
                           ),
                           Expanded(
@@ -86,17 +116,25 @@ class MyHomePage extends StatelessWidget {
                               padding: const EdgeInsets.fromLTRB(
                                   2.0, 10.0, 2.0, 10.0),
                               itemCount: imgAvatar.length,
-                              itemBuilder: (context, index){
+                              itemBuilder: (context, index) {
                                 return InkWell(
                                   child: ListBox(
-                                    name: tvTitle[index],
-                                    description: description[index],
-                                    price: price[index],
-                                    image: imgAvatar[index],
+                                      item: Product(
+                                          tvTitle[index],
+                                          description[index],
+                                          price[index],
+                                          imgAvatar[index])),
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SecondScreen(
+                                          item: Product(
+                                              tvTitle[index],
+                                              description[index],
+                                              price[index],
+                                              imgAvatar[index])),
+                                    ),
                                   ),
-                                  onTap: () => onClickTextView(tvTitle[index])
-                                      // Scaffold.of(context)
-                                      // .showSnackBar(SnackBar(content: Text(index.toString()))),
                                 );
                               },
                             ),
@@ -107,13 +145,18 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-class ListBox extends StatelessWidget {
-  ListBox({Key key, this.name, this.description, this.price, this.image})
-      : super(key: key);
+class Product {
   final String name;
   final String description;
   final int price;
   final String image;
+
+  Product(this.name, this.description, this.price, this.image);
+}
+
+class ListBox extends StatelessWidget {
+  ListBox({Key key, this.item}) : super(key: key);
+  final Product item;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +170,7 @@ class ListBox extends StatelessWidget {
           Padding(
               padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
               child: Image.asset(
-                "assets/images/" + image,
+                "assets/images/" + item.image,
                 width: 120,
               )),
           Expanded(
@@ -136,14 +179,14 @@ class ListBox extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text(this.name,
+                  Text(item.name,
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.green)),
                   Text(
-                    this.description,
+                    item.description,
                     style: TextStyle(color: Colors.red),
                   ),
-                  Text(this.price.toString())
+                  Text(item.price.toString())
                 ],
               ),
             ),
@@ -155,25 +198,30 @@ class ListBox extends StatelessWidget {
 }
 
 class SecondScreen extends StatelessWidget {
+  SecondScreen({Key key, this.item}) : super(key: key);
+  final Product item;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Second Screen"),
       ),
-      body: Container(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Container(
-              child: Text("data"),
+              child: Text(item.name),
             ),
             Container(
-              child: Image.asset("assets/images/img_1.jpg"),
-            ),Container(
-              child: Text("1"),
-            ), Container(
-              child: Text("Học Flutter 1"),
+              child: Image.asset("assets/images/" + item.image),
+            ),
+            Container(
+              child: Text(item.price.toString()),
+            ),
+            Container(
+              child: Text(item.description),
             )
           ],
         ),
@@ -181,5 +229,3 @@ class SecondScreen extends StatelessWidget {
     );
   }
 }
-
-
