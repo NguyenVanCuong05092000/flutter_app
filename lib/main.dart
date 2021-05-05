@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'class/Product.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -23,40 +25,10 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
-  final imgAvatar = [
-    "img_1.jpg",
-    "img_2.jpg",
-    "img_3.jpg",
-    "img_4.jpg",
-    "img_5.jpg",
-    "img_6.jpg",
-    "img_7.jpg",
-    "img_8.jpg",
-    "img_9.jpg"
-  ];
-  final tvTitle = [
-    "img_1.jpg",
-    "img_2.jpg",
-    "img_3.jpg",
-    "img_4.jpg",
-    "img_5.jpg",
-    "img_6.jpg",
-    "img_7.jpg",
-    "img_8.jpg",
-    "img_9.jpg"
-  ];
-  final price = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  final description = [
-    "Học Flutter 1",
-    "Học Flutter 2",
-    "Học Flutter 3",
-    "Học Flutter 4",
-    "Học Flutter 5",
-    "Học Flutter 6",
-    "Học Flutter 7",
-    "Học Flutter 8",
-    "Học Flutter 9"
-  ];
+  final product = List<Product>.generate(
+      9,
+      (index) => Product(
+          'img_$index.jpg', "Học Flutter $index", index, "img_$index.jpg", 2));
 
   onClickTextView(String string) {
     print(string);
@@ -98,7 +70,7 @@ class MyHomePage extends StatelessWidget {
                                   padding:
                                       EdgeInsets.fromLTRB(5.0, 10.0, 0.0, 5.0),
                                   child: Text(
-                                    "Ngôn ngữ lập trình android",
+                                    "Lập trình android",
                                   ),
                                 ),
                               ]),
@@ -115,24 +87,22 @@ class MyHomePage extends StatelessWidget {
                               shrinkWrap: true,
                               padding: const EdgeInsets.fromLTRB(
                                   2.0, 10.0, 2.0, 10.0),
-                              itemCount: imgAvatar.length,
+                              itemCount: product.length,
                               itemBuilder: (context, index) {
                                 return InkWell(
                                   child: ListBox(
-                                      item: Product(
-                                          tvTitle[index],
-                                          description[index],
-                                          price[index],
-                                          imgAvatar[index])),
+                                    item: Product(
+                                        product[index].name,
+                                        product[index].description,
+                                        product[index].price,
+                                        product[index].image,
+                                        product[index].rating),
+                                  ),
                                   onTap: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => SecondScreen(
-                                          item: Product(
-                                              tvTitle[index],
-                                              description[index],
-                                              price[index],
-                                              imgAvatar[index])),
+                                      builder: (context) =>
+                                          SecondScreen(item: product[index]),
                                     ),
                                   ),
                                 );
@@ -145,19 +115,10 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-class Product {
-  final String name;
-  final String description;
-  final int price;
-  final String image;
-
-  Product(this.name, this.description, this.price, this.image);
-}
-
 class ListBox extends StatelessWidget {
   ListBox({Key key, this.item}) : super(key: key);
   final Product item;
-
+  double _size = 20;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -186,7 +147,64 @@ class ListBox extends StatelessWidget {
                     item.description,
                     style: TextStyle(color: Colors.red),
                   ),
-                  Text(item.price.toString())
+                  Text(item.price.toString()),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.all(0),
+                        child: IconButton(
+                          onPressed: () {
+                            print(item.rating);
+                          },
+                          icon: (item.rating >= 1
+                              ? Icon(
+                                  Icons.star,
+                                  size: _size,
+                                )
+                              : Icon(
+                                  Icons.star_border,
+                                  size: _size,
+                                )),
+                          color: Colors.yellow[600],
+                          iconSize: _size,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(0),
+                        child: IconButton(
+                          onPressed: () => item.rating = 2,
+                          icon: (item.rating >= 2
+                              ? Icon(
+                                  Icons.star,
+                                  size: _size,
+                                )
+                              : Icon(
+                                  Icons.star_border,
+                                  size: _size,
+                                )),
+                          color: Colors.yellow[500],
+                          iconSize: _size,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(0),
+                        child: IconButton(
+                          onPressed: () => item.rating = 3,
+                          icon: (item.rating >= 3
+                              ? Icon(
+                                  Icons.star,
+                                  size: _size,
+                                )
+                              : Icon(
+                                  Icons.star_border,
+                                  size: _size,
+                                )),
+                          color: Colors.yellow[500],
+                          iconSize: _size,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -222,6 +240,9 @@ class SecondScreen extends StatelessWidget {
             ),
             Container(
               child: Text(item.description),
+            ),
+            Container(
+              child: Text(item.rating.toString()),
             )
           ],
         ),
